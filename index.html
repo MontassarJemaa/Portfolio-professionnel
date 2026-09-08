@@ -413,11 +413,24 @@
   .proj-modal-dots{ position:absolute; bottom:10px; left:0; right:0; display:flex; justify-content:center; gap:6px; }
   .proj-modal-dots span{ width:6px; height:6px; border-radius:50%; background:var(--line-soft); }
   .proj-modal-dots span.active{ background:var(--amber); }
+  .proj-modal-counter{
+    position:absolute; right:12px; bottom:10px; z-index:1;
+    font-family:var(--mono); font-size:11px; color:var(--text);
+    background:rgba(6,8,9,.72); padding:4px 7px;
+  }
   .proj-modal-body{ padding:30px 34px; }
   .proj-modal-id{ font-family:var(--mono); font-size:12px; color:var(--teal); letter-spacing:.05em; margin-bottom:8px; }
   .proj-modal-title{ font-family:var(--display); font-size:24px; font-weight:600; margin:0 0 16px; }
   .proj-modal-desc{ color:var(--text-muted); font-size:14.5px; line-height:1.65; }
   .proj-modal-desc strong{ color:var(--text); }
+  .back-top{
+    position:fixed; right:24px; bottom:24px; z-index:40;
+    width:40px; height:40px; border:1px solid var(--line); background:var(--surface);
+    color:var(--text); cursor:pointer; opacity:0; pointer-events:none;
+    transition:opacity .15s ease, border-color .15s ease;
+  }
+  .back-top.visible{ opacity:1; pointer-events:auto; }
+  .back-top:hover{ border-color:var(--amber); color:var(--amber); }
   @media (max-width:600px){
     .proj-modal-body{ padding:22px 20px; }
     .proj-modal-gallery img{ max-height:34vh; }
@@ -716,6 +729,18 @@
   </div>
 
   <div class="wrap">
+    <section id="approach">
+      <div class="sec-head"><span class="idx">06</span><h2 class="i18n" data-fr="Approche de réalisation" data-en="Delivery approach">Approche de réalisation</h2></div>
+      <div class="stack-grid">
+        <div class="stack-cell"><h3 class="i18n" data-fr="01 · Comprendre" data-en="01 · Understand">01 · Comprendre</h3><p class="i18n" data-fr="Analyser le besoin terrain, les contraintes de production, les flux de données et les exigences de sécurité." data-en="Analyze the field need, production constraints, data flows and security requirements.">Analyser le besoin terrain, les contraintes de production, les flux de données et les exigences de sécurité.</p></div>
+        <div class="stack-cell"><h3 class="i18n" data-fr="02 · Concevoir" data-en="02 · Design">02 · Concevoir</h3><p class="i18n" data-fr="Définir l'architecture, les interfaces entre équipements et les indicateurs utiles au suivi." data-en="Define the architecture, equipment interfaces and indicators needed for monitoring.">Définir l'architecture, les interfaces entre équipements et les indicateurs utiles au suivi.</p></div>
+        <div class="stack-cell"><h3 class="i18n" data-fr="03 · Intégrer" data-en="03 · Integrate">03 · Intégrer</h3><p class="i18n" data-fr="Installer, connecter et mettre en service les équipements, les applications et les bases de données." data-en="Install, connect and commission equipment, applications and databases.">Installer, connecter et mettre en service les équipements, les applications et les bases de données.</p></div>
+        <div class="stack-cell"><h3 class="i18n" data-fr="04 · Suivre" data-en="04 · Improve">04 · Suivre</h3><p class="i18n" data-fr="Valider sur le terrain, documenter la solution et suivre les indicateurs après déploiement." data-en="Validate in the field, document the solution and track indicators after deployment.">Valider sur le terrain, documenter la solution et suivre les indicateurs après déploiement.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap">
     <section id="contact" style="border-bottom:none;">
       <div class="contact-box">
         <div>
@@ -743,6 +768,7 @@
       <button class="proj-modal-nav prev" id="projModalPrev" aria-label="Précédent">‹</button>
       <button class="proj-modal-nav next" id="projModalNext" aria-label="Suivant">›</button>
       <div class="proj-modal-dots" id="projModalDots"></div>
+      <div class="proj-modal-counter" id="projModalCounter" aria-live="polite"></div>
     </div>
     <div class="proj-modal-body">
       <div class="proj-modal-id" id="projModalId"></div>
@@ -751,6 +777,8 @@
     </div>
   </div>
 </div>
+
+<button class="back-top" id="backTop" type="button" aria-label="Retour en haut">↑</button>
 
 <script>
   document.getElementById('menuBtn').addEventListener('click', function(){
@@ -810,13 +838,22 @@
       ['Gestion des projets/Mécanuméric (9).jpg','Gestion des projets/ASTRA (1).jpg','Gestion des projets/ASTRA (2).jpg','Gestion des projets/Mécanuméric (1).jpg','Gestion des projets/Mécanuméric (2).jpg','Gestion des projets/Mécanuméric (3).jpg','Gestion des projets/Mécanuméric (4).jpg','Gestion des projets/Mécanuméric (5).jpg','Gestion des projets/Mécanuméric (6).jpg','Gestion des projets/Mécanuméric (7).jpg','Gestion des projets/Mécanuméric (8).jpg','Gestion des projets/Mécanuméric (11).jpg','Gestion des projets/OMIA (1).jpg','Gestion des projets/OMIA (2).jpg','Gestion des projets/OMIA (3).jpg','Gestion des projets/OMIA (4).JPG','Gestion des projets/OMIA (5).JPG','Gestion des projets/OMIA (6).jpg','Gestion des projets/OMIA (7).jpg','Gestion des projets/OMIA (8).JPG','Gestion des projets/PREPARATION (1).JPG','Gestion des projets/PREPARATION (2).JPG'],
       ['Suivi énergétique bas carbone/Bas Carbone (1).jpg','Suivi énergétique bas carbone/Bas Carbone (1)-dashboard.jpg','Suivi énergétique bas carbone/Bas Carbone (2).JPG','Suivi énergétique bas carbone/Bas Carbone (3).JPG']
     ];
+    var projectCoverSets = [
+      'Connectivité & supervision industrielle/cover-geg.jpg',
+      'Robotique & automatisation/cover-robotique.jpg',
+      'IoT & systèmes embarqués/cover-iot.jpg',
+      'RFID & traçabilité industrielle/cover-rfid.jpg',
+      'Gestion des projets/cover-gestion.jpg',
+      'Suivi énergétique bas carbone/cover-energie.jpg'
+    ];
 
     document.querySelectorAll('.proj').forEach(function(proj, projectIndex){
       var photos = projectPhotoSets[projectIndex] || [];
       if (!photos.length) return;
       var cover = proj.querySelector('.proj-photo');
-      cover.src = encodeURI(photos[0]);
+      cover.src = encodeURI(projectCoverSets[projectIndex] || photos[0]);
       cover.loading = 'lazy';
+      cover.decoding = 'async';
       cover.alt = (proj.querySelector('h3') || {}).textContent || 'Image du projet';
       if (projectIndex === 2) cover.classList.add('proj-photo--iot-cover');
       if (projectIndex === 4) cover.classList.add('proj-photo--management-cover');
@@ -829,6 +866,7 @@
     var modalTitle = document.getElementById('projModalTitle');
     var modalDesc = document.getElementById('projModalDesc');
     var modalDots = document.getElementById('projModalDots');
+    var modalCounter = document.getElementById('projModalCounter');
     var prevBtn = document.getElementById('projModalPrev');
     var nextBtn = document.getElementById('projModalNext');
     var closeBtn = document.getElementById('projModalClose');
@@ -839,7 +877,9 @@
 
     function renderImage(){
       modalImg.src = currentImages[currentIndex];
+      modalImg.decoding = 'async';
       modalImg.alt = 'Image ' + (currentIndex + 1) + ' sur ' + currentImages.length + ' du projet ' + modalTitle.textContent;
+      modalCounter.textContent = currentImages.length > 1 ? (currentIndex + 1) + ' / ' + currentImages.length : '';
       modalDots.innerHTML = '';
       if (currentImages.length > 1){
         currentImages.forEach(function(_, i){
@@ -909,6 +949,12 @@
       renderImage();
     });
   })();
+
+  var backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', function(){
+    backTop.classList.toggle('visible', window.scrollY > 500);
+  }, {passive:true});
+  backTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
 </script>
 
 </body>

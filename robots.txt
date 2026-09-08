@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://montassarjemaa.github.io/Portfolio-professionnel/sitemap.xml
